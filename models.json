@@ -1,0 +1,141 @@
+{
+  "email": {
+    "dataSource": "mail",
+    "public": false,
+    "options": {
+      "base": "Email"
+    }
+  },
+  "user": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "base": "User",
+      "relations": {
+        "accessTokens": {
+          "model": "accessToken",
+          "type": "hasMany",
+          "foreignKey": "userId"
+        }
+      }
+    }
+  },
+  "accessToken": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "base": "AccessToken"
+    }
+  },
+  "application": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "base": "Application"
+    }
+  },
+  "acl": {
+    "dataSource": "db",
+    "public": false,
+    "options": {
+      "base": "ACL"
+    }
+  },
+  "roleMapping": {
+    "dataSource": "db",
+    "public": false,
+    "options": {
+      "base": "RoleMapping"
+    }
+  },
+  "role": {
+    "dataSource": "db",
+    "public": false,
+    "options": {
+      "base": "Role",
+      "relations": {
+        "principals": {
+          "type": "hasMany",
+          "model": "roleMapping",
+          "foreignKey": "roleId"
+        }
+      }
+    }
+  },
+  "scope": {
+    "dataSource": "db",
+    "public": false,
+    "options": {
+      "base": "Scope"
+    }
+  },
+  "push": {
+    "dataSource": "push",
+    "options": {
+      "base": "Push",
+      "plural": "push"
+    }
+  },
+  "installation": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "base": "Installation"
+    }
+  },
+  "notification": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "base": "Notification"
+    }
+  },
+  "info": {
+    "dataSource": "mongodb",
+    "public": true,
+    "plural": "infos",
+    "properties": {
+      "id": {
+    	"type" : "string",
+    	"id" : true,
+    	"generated" : true
+      },
+      "LV_Name": {
+        "type": "string"
+      },
+      "Latest_Version": {
+        "type": "string"
+      },
+      "Description": {
+    	  "type": "string" 
+      },
+      "Author": {
+        "type": "string"
+      },
+      "GIT_Repository": {
+        "type": "string"
+      },
+      "Home_Page": {
+        "type": "string"
+      },
+      "Bugs": {
+        "type": "string"
+      },
+      "License": {
+        "type": "string"
+      },
+      "Dependencies": {
+        "type": "object"
+      },
+      "Contributors": {
+        "type": "array"
+      },
+      "Maintainers": {
+        "type": "object"
+      },
+      "Read_Me": {
+        "type": "string"
+      }
+    }
+  }
+}

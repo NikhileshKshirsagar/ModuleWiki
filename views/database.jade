@@ -1,0 +1,11 @@
+html
+  title= title
+  body
+    h1 Database Contents
+    -var Answer = Result
+    form#form1(name = 'form1', method = 'post', action = '/database')
+      for variable in Answer
+        -var vb = variable['id'];
+        input#input(type='radio', name= 'input',placeholder= vb,value= vb)
+        |#{vb}
+      button#b1(type='submit',name='button') Submit

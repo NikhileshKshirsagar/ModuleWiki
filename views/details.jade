@@ -1,0 +1,14 @@
+html
+  title= title
+  body
+    h1= title
+    p Module Name : #{Result['LV Name']}
+    p Latest Version : #{Result['Latest Version']}
+    p Author : #{Result['LV Author']}
+    p GIT Repository : #{Result['GIT repository']}
+    p License : #{Result['License']}
+    p Dependencies : #{Result['Dependencies']}
+    p Description : #{Result['LV Description']} 
+    p Read Me :      
+    textarea(rows = '25', cols = '80')
+      #{Result['Read Me']}

@@ -1,0 +1,23 @@
+{
+  "db": {
+    "connector": "memory",
+    "defaultForType": "db"
+  },
+  "push": {
+    "connector": "loopback-push-notification",
+    "defaultForType": "push",
+    "installation": "installation",
+    "notification": "notification",
+    "application": "application"
+  },
+  "mail": {
+    "connector": "mail",
+    "defaultForType": "mail"
+  },
+  "mongodb": {
+	"connector": "mongodb",
+	"host" : "127.0.0.1",
+	"database" : "project",
+	"port" : 27017
+  }
+}
