@@ -1,0 +1,15 @@
+<script src= "js/jquery-2.1.1.min.js"></script>
+<script src= "js/jsdb.js"></script>
+
+<div id='div3'>
+	<h3> Database Contents </h3>
+	<form id='form1' name='form1' method='post' action='/'>
+		{{#each result}}
+			<input id={{id}} type='radio' name='input'}>{{id}}</input>
+     	{{/each}}
+     	<button id='submit' type='button'>Submit</button>
+	</form>
+</div>
+
+<div id='div4'>
+</div>

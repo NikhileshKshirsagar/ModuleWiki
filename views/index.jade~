@@ -1,0 +1,52 @@
+html
+  title= title
+  body
+    h1= Welcome
+    form#form1(name = 'form1', method = 'post', action = '/')
+      p Enter Module Name
+      input#input(type='text', placeholder='Input', name='input')
+      button#b1(type='submit') Search
+
+      if Result 
+        if Result['Flag']
+          p Module Name : #{Result['LV Name']}
+          p Latest Version : #{Result['Latest Version']}
+          if Result['LV Author']
+            p Author : #{Result['LV Author']}
+          if Result['GIT repository']
+            p GIT Repository : 
+              a(href="#{Result['GIT repository']}") #{Result['GIT repository']}
+          if Result['Homepage']
+            p Home Page : 
+              a(href="#{Result['Homepage']}") #{Result['Homepage']}
+          if Result['Bugs']
+            p Bugs : 
+              a(href="#{Result['Bugs']}") #{Result['Bugs']}
+          if Result['License']
+            p License : #{Result['License']}
+          if Result['Dependencies']
+            p Dependencies : 
+              ul
+                for variable in Result['Dependencies'].Depend
+                  li #{variable.key} : #{variable.value}
+          if Result['Desciption']
+            p Description : #{Result['LV Description']}
+        
+          if Result['Contributors']
+            p Contributors : 
+              ul
+                for variable in Result['Contributors']           
+                  li #{variable.name }
+          if Result['Maintainers']
+            p Maintainers : 
+              ul
+                for variable in Result['Maintainers']           
+                  li #{variable.name }
+          if Result['Read Me']
+            p Read Me :      
+            textarea(rows = '25', cols = '80')
+              #{Result['Read Me']}  
+
+        else
+          h3 Error
+          p #{Result.Messege} 		

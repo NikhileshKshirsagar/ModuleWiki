@@ -1,12 +1,13 @@
-//Updated
-
 var loopback = require('loopback');
 var express = require('express');
 var path = require('path');
 var request = require('request');
 var underscore = require('underscore');
+var Handlebars = require('handlebars');
 var app = module.exports = loopback();
 var started = new Date();
+
+var index = require('./views/index.hbs')
 
 /*
  * 1. Configure LoopBack models and datasources
@@ -22,6 +23,13 @@ app.boot(__dirname);
  *  LoopBack support all express-compatible middleware.
  */
 
+app.configure(function () {
+	  app.set('view engine', 'handlebars');
+	  app.set("view options", { layout: false })
+	  app.set('views', __dirname + '/views');
+//		app.engine('.hbs', Handlebars);
+	});
+
 app.use(loopback.favicon());
 app.use(loopback.logger(app.get('env') === 'development' ? 'dev' : 'default'));
 app.use(loopback.cookieParser(app.get('cookieSecret')));
@@ -33,27 +41,44 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.get('/',function(req,res){
-	res.render('index',{title :'NPM Search'});
+	var resp = {};
+	resp['title'] = 'Node Modules';
+	var resp = {};
+	var result = index({"data" : resp});
+	res.send(result);
 });
 
 app.post('/', function(req,res){
-	console.log('Input is :'+ req.body.input);
+	console.log('Module name :'+req.body.input);
 	var url = 'http://isaacs.iriscouch.com/registry/';
     url = url + req.body.input;
     
-	request(url,function(error,response,body){
-		var obj = JSON.parse(body);
+    var obj = {};
+    var string = req.body.operation;
+    console.log(url);
+    request(url,function(error,response,body){
+		obj = JSON.parse(body);
 		obj = parseobj(obj,req.body.input);
-		if(req.body.button == '2')
-			console.log('Input is :'+ req.body.input);
-		if(req.body.button == '2' && obj["Flag"] === '0')
-		{
+		
+		console.log(string);
+		
+		if(string === 'search'){
+			console.log(obj.LV_Name);
+			var result = require('./views/results.hbs');
+			var variable = result({'result' : obj})
+	    	res.send(variable);
+		}
+		
+		else if(string === 'save'){
+			console.log('Saving operation..');
+			
+			if(!underscore.isUndefined(obj['Flag'])){
 			myapp.upsert({id : obj["LV_Name"],
 				LV_Name : obj["LV_Name"],
 				Latest_Version : obj["Latest_Version"],
-				Decription : obj["Descripiton"],
-				Author : obj["LV_Author"],
-				GIT_Repository : obj["GIT_repository"],
+				Decription : obj["Description"],
+				LV_Author : obj["LV_Author"],
+				GIT_Repository : obj["GIT_Repository"],
 				Home_Page : obj["Home_Page"],
 				Bugs : obj["Bugs"],
 				License : obj["License"],
@@ -65,7 +90,7 @@ app.post('/', function(req,res){
 				function(err,information){
 					if(err){console.log('error in saving into database');}
 					else {console.log('Successful saving!');}
-				});
+			});
 			
 			myapp.find({},function(err,obj1){
 				if(err) res.send('Error in loading page..');
@@ -79,28 +104,76 @@ app.post('/', function(req,res){
 				}
 				console.log('');
 				console.log(obj2);
-				res.render('database',{title : req.body.input, "Result" : obj2});
+				
+				var result1 = require('./views/results.hbs');
+				var result = require('./views/db.hbs');
+				var variable = result({'result' : obj2});
+				var variable1 = result1({'result' : obj});
+				var variable2 = {'variable1' : variable, 'variable2' : variable1}
+				res.send(variable2);
+				
 			});
-			
-		}
-		else
-			res.render('index',{title : req.body.input, "Result" : obj});
-	
-	});
-});
-
-app.post('/database', function(req,res){
-	var id = req.body.input;
-	myapp.findById(id, function(err,instance){
-		if(err) res.send('Error in fetching data from database');
-		else{
-			instance['Flag'] = '0';
-			instance['LV_Name'] = instance.id;
-			
-			res.render('index',{title : instance.id, "Result" : instance});
+			}
+			else{
+				var result = 'Error! Can not save \"' + req.body.input + '\"';
+				res.send(result);
+			}	
 		}
 		
-	});
+		else if(string === 'display'){
+			console.log('Fetching from database..');
+			var id = req.body.module;
+			console.log(id);	
+			myapp.findById(id, function(err,instance){
+				if(err) res.send('Error in fetching data from database');
+				else{
+					console.log(typeof(instance));
+					instance['Flag'] = '0';
+					instance['LV_Name'] = instance.id;
+					console.log(JSON.stringify(instance));
+					var result = require('./views/results.hbs');
+					var variable = result({'result' : instance});
+			    	res.send(variable);	
+					//res.render('index',{title : instance.id, "Result" : instance});
+				}
+				
+			});
+		}
+		
+		else if(string === 'database'){
+			myapp.find({},function(err,obj1){
+				if(err) res.send('Error in loading page..');
+				console.log(obj1.length);
+				var obj2 = [];
+				for(var i = 0; i < obj1.length; i++){
+					var obj3 = {};
+					obj3['id'] = obj1[i].id;
+					obj2.push(obj3);
+					//console.log(obj3);
+				}
+				console.log('');
+				console.log(obj2);
+				
+				var result = require('./views/db.hbs');
+				var variable = result({'result' : obj2});
+				
+				res.send(variable);
+				
+			});
+		}
+    });
+    
+    /*if(req.body.operation === 'search'){
+    	var result = require('./views/results.hbs');
+    	console.log(obj.LV_Name);
+    	var variable = result({'result1' : obj})
+    	res.send(variable);
+    }
+    else if(req.body.operation === 'display'){
+    	var object = obj;
+    	res.send({'data' : object});
+    }*/
+    	
 });
 
 function parseobj(obj,input)
@@ -108,7 +181,8 @@ function parseobj(obj,input)
 	var object = {}; 
 	if(obj.error === 'not_found')
 	{
-		object['Messege'] = 'No data for \"' + input + '\"';
+		console.log('Module not found');
+		object['Messege'] = ' Error! No data for \"' + input + '\"';
 		return object;
 	}
 	
@@ -159,7 +233,7 @@ function parseobj(obj,input)
 
 			//Homepage
 			if(!underscore.isUndefined(obj.versions[version].homepage)){	
-				object["Homepage"] = obj.versions[version].homepage;
+				object["Home_Page"] = obj.versions[version].homepage;
 			}
 			console.log('Done with Homepage');	
 

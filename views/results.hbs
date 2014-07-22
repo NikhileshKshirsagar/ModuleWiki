@@ -1,0 +1,75 @@
+<div id='div1'>
+	{{#if result}}
+		{{#if result.Flag}}
+			<h3> Module Details </h3>
+			<p> Module Name : {{result.LV_Name}} </p>
+					
+			<p> Latest Version : {{result.Latest_Version}} </p>
+					
+		    {{#if result.LV_Author}}
+				<p> Author : {{result.LV_Author}} </p>
+			{{/if}}
+					
+			{{#if result.GIT_Repository}}
+				<p> GIT Repository : 
+				<a href={{result.GIT_Repository}}>{{result.GIT_Repository}}</a></p>
+			{{/if}}
+					
+			{{#if result.Home_Page}}
+				<p> Homepage : 
+				<a href={{result.Home_Page}}> {{result.Home_Page}}</a> </p>
+			{{/if}}
+					
+			{{#if result.Bugs}}
+				<p> Bugs :
+				<a href={{result.Bugs}}> {{result.Bugs}}</a></p>
+			{{/if}}
+					
+			{{#if result.License}}
+				<p> License : {{result.License}} </p>
+			{{/if}}
+					
+			{{#if result.Dependencies}}
+				<p> Dependencies :</p>
+					<ul>
+						{{#each result.Dependencies.Depend}}
+							<li>{{key}} : {{value}} </li>
+						{{/each}}
+					</ul>
+			{{/if}}
+					
+			{{#if result.Description}}
+				<p> Description : {{result.Description}} </p>
+			{{/if}}
+					
+			{{#if result.Contributors}}
+				<p> Contributors </p>
+					<ul>
+						{{#each result.Contributors}}
+							<li> {{name}} </li>
+						{{/each}}
+					</ul>
+			{{/if}}
+					
+			{{#if result.Maintainers}}
+				<p> Maintainers </p>
+					<ul>
+						{{#each result.Maintainers}}
+							<li> {{name}} </li>
+						{{/each}}
+					</ul>
+			{{/if}}
+					
+			{{#if result.Read_Me}}
+				<p> Read Me : </p>
+				<textarea rows="25" cols="50">
+					{{result.Read_Me}}
+				</textarea>
+			{{/if}}
+					
+		{{else}}
+			<h3> {{result.Messege}} </h3>	
+		{{/if}}
+	{{/if}}
+			
+</div>
