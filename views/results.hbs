@@ -1,7 +1,9 @@
-<div id='div1'>
+<div class='panel panel-success'>
+<div class='panel-heading'><h3> Module Details </h3></div>
 	{{#if result}}
 		{{#if result.Flag}}
-			<h3> Module Details </h3>
+			
+			<div class='panel-body'>
 			<p> Module Name : {{result.LV_Name}} </p>
 					
 			<p> Latest Version : {{result.Latest_Version}} </p>
@@ -65,10 +67,13 @@
 				<textarea rows="25" cols="50">
 					{{result.Read_Me}}
 				</textarea>
+			</div>
 			{{/if}}
 					
 		{{else}}
-			<h3> {{result.Messege}} </h3>	
+			<div class='panel-body'>
+			<h3> {{result.Messege}} </h3>
+			</div>	
 		{{/if}}
 	{{/if}}
 			
